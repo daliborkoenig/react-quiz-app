@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Space+Grotesk:wght@300&display=swap');
+$title-font: 'Space Grotesk', sans-serif;
+$body-font: 'Montserrat', sans-serif;
+$backgr: 'rgba(255,255,255,0.6)';
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: $body-font;
+  color: #1081FE;
+}
+a{
+  text-decoration: none;
+}
+.btn{
+  background-color: black !important;
+  border: none;
+}
+
+.App{
+  height: 100vh;
+  width: 100vw;
+  background-color: #d2eaf5;
+  position: relative;
+  .quiz-container{
+    padding: 20px;
+    width: 70%;
+    height: 70%;
+    background-color: #F5DDD2;
+    .question{
+      font-size: larger;
+      border: #1081FE solid 1px;
+    }
+    .answer{
+      border: #1081FE solid 1px;
+      cursor: pointer;    
+      position: relative;
+    }
+    .answer > .true{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      background-color: rgba(0, 128, 0, 0.4);
+    }
+    .answer > .false{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      background-color: rgba(255, 0, 0, 0.4);
+      z-index: 1;
+    }
+  }
+}
