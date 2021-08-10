@@ -1,53 +1,66 @@
-import React , { useEffect, useState , useReducer } from 'react'
-import reducer from '../Reducer/QuestionReducer'
+import React , { useEffect, useState , useContext , useCallback} from 'react'
+import anime from 'animejs';
 import parse from 'html-react-parser'
 
-function Question(props) {
-  const [qNum, dispatch] = useReducer(reducer, { count: 0 });
-  const [loaded, setLoaded] = useState(false);
-  const [show, setShow] = useState(false);
+const shuffle = (array) => {
+  let counter = array.length;
+  while (counter > 0) {
+    let index = Math.floor(Math.random() * counter);
+    counter--;
+    let temp = array[counter];
+    array[counter] = array[index];
+    array[index] = temp;
+  }
+  return array;
+}
+
+function Questions(props) {
+  const [qNum, setQnum] = useState(0);
+  const [score, setScore] = useState(0);
+  const [show, setShow] = useState(true);
+  const [qa, setQa] = useState({
+    question: props.questions[qNum].question,
+    correctAnswer: props.questions[qNum].correct_answer,
+    incorrectAnswers: props.questions[qNum].incorrect_answers,
+  });
+  const [allAnsw, setAllAnsw] = useState(shuffle([{answer: qa.correctAnswer, correct: true}, ...qa.incorrectAnswers.map(i => ({answer: i, correct: false}))]));
   useEffect(() => {
-    setLoaded(true)
-  }, [props.loaded]) 
-  const shuffle = (array) => {
-    let counter = array.length;
-    while (counter > 0) {
-      let index = Math.floor(Math.random() * counter);
-      counter--;
-      let temp = array[counter];
-      array[counter] = array[index];
-      array[index] = temp;
-    }
-    return array;
-  }
-  const questions = () => {
-    let question = props.questions[qNum.count].question
-    let correctAnswer = props.questions[qNum.count].correct_answer
-    let incorrectAnswers = props.questions[qNum.count].incorrect_answers
-    let allAnswers = [{answer: correctAnswer, correct: true}]
-    incorrectAnswers.forEach(element => {
-      allAnswers.push({answer: element, correct: false})
+    console.log("WTF");
+  }, [props])
+  useEffect(() => {
+    setQa({
+    question: props.questions[qNum].question,
+    correctAnswer: props.questions[qNum].correct_answer,
+    incorrectAnswers: props.questions[qNum].incorrect_answers,
+    })
+  }, [qNum])
+  useEffect(() => {
+    setAllAnsw(shuffle([{answer: qa.correctAnswer, correct: true}, ...qa.incorrectAnswers.map(i => ({answer: i, correct: false}))]))
+  }, [qa])
+  console.log("rendering questions");
+
+  const checkAnswer = (item, el) => {
+    console.log("checking....");
+    anime({
+      targets: el,
+      translateX: 270,
+      delay: anime.stagger(100) // increase delay by 100ms for each elements.
     });
-    return (
-      <div>
-        <p className="question">{parse(question)}</p>
-        {allAnswers.map((answer,i) => <p className="answer" key={Math.random()} id={`${answer.correct}`} onClick={(e)=>{!show && checkAnswer(answer.correct)}}>{parse(answer.answer)}{show && <span className={`${answer.correct}`}></span>}</p>)}
-      </div>
-    )
-  }
-  const checkAnswer = (item) => {
-    setShow(true)
     if(item){
+      console.log("correct");
       props.changeScore()
     }
   }
   return (
     <div>
-      <p>Question: {qNum.count+1}/{props.questions.length}</p>
-      {loaded  && questions()}
-      {qNum.count === 11 && show ? <button onClick={() => {props.showResult()}}>Finish</button> : <button onClick={() => {dispatch({type: 'ADD'}); setShow(false)}}>Next Question</button>}
+      <p className="qNum">Question: {qNum}</p>
+      <div>
+        <p className="question">{parse(props.questions[qNum].question)}</p>
+        {allAnsw.map((answer,i) => <p className="answer" key={Math.random()} id={`${answer.correct}`} onClick={(e)=>{checkAnswer(answer.correct, e.target)}}>{parse(answer.answer)}</p>)}
+      </div>
+      {qNum.count === 11 && show ? <button onClick={() => {props.showResult()}}>Finish</button> : <button onClick={() => {setQnum(qNum+1); setShow(false)}}>Next Question</button>}
     </div>
   )
 }
 
-export default Question
+export default Questions

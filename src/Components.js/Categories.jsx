@@ -6,17 +6,17 @@ function Categories(props) {
     e.preventDefault()
     const formData = new FormData(e.target),
     formDataObj = Object.fromEntries(formData.entries())
-    props.getCategory(formDataObj.category, formDataObj.level)
+    props.chooseCat(formDataObj.category, formDataObj.level)
     e.target.reset();
   }
+  // console.log(props);
   return (
     <div className="categories">
-      {props.categories.loaded && 
       <Form onSubmit={handleSubmit}>
         <Form.Group>
           <Form.Label>Choose a category</Form.Label>
           <Form.Select aria-label="categories" name="category">
-            {props.categories.categories.map(cat => <option key={Math.random()}value={cat.id}>{cat.name}</option>)}
+            {props.trivia_categories.map(cat => <option key={Math.random()}value={cat.id}>{cat.name}</option>)}
           </Form.Select>
         </Form.Group>
         <Form.Group>
@@ -28,7 +28,7 @@ function Categories(props) {
           </Form.Select>
         </Form.Group>
         <Button type="submit">Let's go!</Button>
-      </Form>}
+      </Form>
     </div>
   )
 }
