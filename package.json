@@ -1,6 +1,6 @@
 {
-  "name": "react-blog-app",
-  "homepage": "https://daliborkoenig.github.io/react-blog-app/",
+  "name": "react-quiz-app",
+  "homepage": "https://daliborkoenig.github.io/react-quiz-app/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
