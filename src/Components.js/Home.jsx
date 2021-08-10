@@ -1,4 +1,5 @@
-import logo from '../Images/logo.svg'
+import icon from '../Images/icon.svg'
+import logo from '../Images/logo-solo.svg'
 import React, { useState, useContext } from 'react'
 import useFetch from 'react-fetch-hook';
 import Categories from './Categories';
@@ -13,7 +14,7 @@ function Home(props) {
 
   console.log("rendering home");
   const { isLoading , error , data } = useFetch(`https://opentdb.com/api.php?amount=12&category=${api.category}&difficulty=${api.level}`)
-  if(isLoading) return "...loading";
+  if(isLoading) return <div className="loading"><p>...loading</p></div>;
   if(error) return "Error: " + error;
   const changeScore = () => {
     console.log("changing score");
@@ -28,12 +29,14 @@ function Home(props) {
   console.log(score);
   return (
     <div className="quiz-container">
-      <img src={logo} alt="" />
-      <h1>My little Quiz</h1>
-      <p>Check your knowledge!</p>
-      <Score score={score}/>
+      <div className="logotrip">
+        <img src={logo} alt="logo" className="logo"/>
+        {data.results.length === 0 && <img src={icon} alt="logo-icon" className="icon"/>}
+        <p>Test your knowledge!</p>
+      </div>
+      {/* <Score score={score}/> */}
       {data.results.length === 0 && <Categories {...props} chooseCat={chooseCat}/>}
-      {data.results.length > 0 && <Questions showResult={showResult} changeScore={changeScore} questions={data.results}/>}
+      {data.results.length > 0 && <Questions score={score} changeScore={changeScore} questions={data.results}/>}
     </div>
   )
 }
